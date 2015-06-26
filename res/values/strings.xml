@@ -18,6 +18,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
 	<string name="app_name">OmniSwitch</string>
+	<string name="status_bar_recent_float_item_title">Float Mode</string>
 	<string name="package_stop_task_title">Stop</string>
 	<string name="package_inspect_item_title">App info</string>
 	<string name="recents_settings_title">OmniSwitch</string>
@@ -71,7 +72,7 @@
 	<string name="buttons_summary">Configure action buttons in overlay view</string>
 	<string name="auto_hide_handle">Auto-hide</string>
 	<string name="auto_hide_handle_summary">Two swipes to show overlay view</string>
-	<string name="no_recent_apps_title">No recent apps</string>
+	<string name="no_recent_apps_title">VRToxin fully optimized</string>
 	<string name="drag_handle_opacity_title">Opacity</string>
 	<string name="drag_handle_enable_title">Enable</string>
 	<string name="drag_handle_enable_summary">Disable only if you use another activation method</string>
