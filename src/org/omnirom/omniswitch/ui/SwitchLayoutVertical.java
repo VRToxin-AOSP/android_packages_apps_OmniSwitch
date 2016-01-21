@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2015 The OmniROM Project
+ *  Copyright (C) 2015-2016 The OmniROM Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -259,16 +259,16 @@ public class SwitchLayoutVertical extends AbstractSwitchLayout {
         mPopupView.setOnKeyListener(new PopupKeyListener());
 
         mButtonList = (ScrollView) mView
-                .findViewById(mConfiguration.mButtonPos == 0 ? R.id.button_list_top
-                        : R.id.button_list_bottom);
-        mButtonList.setVerticalScrollBarEnabled(false);
+                .findViewById(R.id.button_list_top);
+        mButtonList.setHorizontalScrollBarEnabled(false);
         mButtonListItems = (LinearLayout) mView
-                .findViewById(mConfiguration.mButtonPos == 0 ? R.id.button_list_items_top
-                        : R.id.button_list_items_bottom);
-        mButtonListContainer = (LinearLayout) mView
-                .findViewById(mConfiguration.mButtonPos == 0 ? R.id.button_list_container_top
-                        : R.id.button_list_container_bottom);
+                .findViewById(R.id.button_list_items_top);
 
+        mButtonListContainerTop = (LinearLayout) mView
+                .findViewById(R.id.button_list_container_top);
+        mButtonListContainerBottom = (LinearLayout) mView
+                .findViewById(R.id.button_list_container_bottom);
+        selectButtonContainer();
         updateStyle();
     }
 
@@ -438,6 +438,9 @@ public class SwitchLayoutVertical extends AbstractSwitchLayout {
         }
         addOpenFavoriteButton();
         if (mView != null) {
+            if (key.equals(SettingsActivity.PREF_BUTTON_POS)) {
+                selectButtonContainer();
+            }
             updateStyle();
         }
     }
@@ -511,7 +514,7 @@ public class SwitchLayoutVertical extends AbstractSwitchLayout {
                     mLinearInterpolator,
                     ObjectAnimator.ofFloat(mOpenFavorite, View.ROTATION,
                     mConfiguration.mLocation != 0 ? ROTATE_270_DEGREE : ROTATE_90_DEGREE,
-                    mConfiguration.mLocation != 0 ? ROTATE_270_DEGREE + ROTATE_180_DEGREE : ROTATE_270_DEGREE));
+                    mConfiguration.mLocation != 0 ? ROTATE_90_DEGREE : ROTATE_270_DEGREE));
             mShowFavAnim = new AnimatorSet();
             mShowFavAnim.playTogether(expandAnimator, rotateAnimator);
             mShowFavAnim.setDuration(FAVORITE_DURATION);
@@ -527,7 +530,7 @@ public class SwitchLayoutVertical extends AbstractSwitchLayout {
                     mLinearInterpolator,
                     ObjectAnimator.ofFloat(mOpenFavorite, View.ROTATION,
                     mConfiguration.mLocation != 0 ? ROTATE_90_DEGREE : ROTATE_270_DEGREE,
-                    mConfiguration.mLocation != 0 ? ROTATE_270_DEGREE : ROTATE_270_DEGREE + ROTATE_180_DEGREE));
+                    mConfiguration.mLocation != 0 ? ROTATE_270_DEGREE : ROTATE_90_DEGREE));
             mShowFavAnim = new AnimatorSet();
             mShowFavAnim.playTogether(collapseAnimator, rotateAnimator);
             mShowFavAnim.setDuration(FAVORITE_DURATION);
@@ -668,5 +671,10 @@ public class SwitchLayoutVertical extends AbstractSwitchLayout {
         if (mRamDisplay != null) {
             mHandler.post(mUpdateRamBarTask);
         }
+    }
+
+    @Override
+    protected View getButtonList() {
+        return mButtonList;
     }
 }
