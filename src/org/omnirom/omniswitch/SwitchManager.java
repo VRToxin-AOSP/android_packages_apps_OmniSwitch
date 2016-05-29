@@ -45,7 +45,6 @@ public class SwitchManager {
     private static final String TAG = "SwitchManager";
     private static final boolean DEBUG = false;
     private List<TaskDescription> mLoadedTasks;
-    private List<TaskDescription> mActiveTasks;
     private ISwitchLayout mLayout;
     private SwitchGestureView mGestureView;
     private Context mContext;
@@ -116,7 +115,6 @@ public class SwitchManager {
         }
 
         mLoadedTasks = new ArrayList<TaskDescription>();
-        mActiveTasks = new ArrayList<TaskDescription>();
         switchLayout();
         mGestureView = new SwitchGestureView(this, mContext);
     }
@@ -151,7 +149,6 @@ public class SwitchManager {
         }
         mLoadedTasks.clear();
         mLoadedTasks.addAll(taskList);
-        filterActiveTasks();
         mLayout.update();
         mGestureView.update();
     }
@@ -239,7 +236,6 @@ public class SwitchManager {
         }
         ad.setKilled();
         mLoadedTasks.remove(ad);
-        mActiveTasks.remove(ad);
         mLayout.refresh();
     }
 
@@ -281,7 +277,7 @@ public class SwitchManager {
         final ActivityManager am = (ActivityManager) mContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
 
-        if (mActiveTasks.size() <= 1) {
+        if (getTasks().size() <= 1) {
             if(close){
                 hide(true);
             }
@@ -310,15 +306,15 @@ public class SwitchManager {
         final ActivityManager am = (ActivityManager) mContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
 
-        if (mActiveTasks.size() == 0) {
+        if (getTasks().size() == 0) {
             if(close){
                 hide(true);
             }
             return;
         }
 
-        if (mActiveTasks.size() >= 1){
-            TaskDescription ad = mActiveTasks.get(0);
+        if (getTasks().size() >= 1){
+            TaskDescription ad = getTasks().get(0);
             am.removeTask(ad.getPersistentTaskId());
             if(DEBUG){
                 Log.d(TAG, "kill " + ad.getPackageName());
@@ -353,14 +349,14 @@ public class SwitchManager {
     }
 
     public void toggleLastApp(boolean close) {
-        if (mActiveTasks.size() < 2) {
+        if (getTasks().size() < 2) {
             if(close){
                 hide(true);
             }
             return;
         }
 
-        TaskDescription ad = mActiveTasks.get(1);
+        TaskDescription ad = getTasks().get(1);
         switchTask(ad, close, true);
     }
     
@@ -443,23 +439,11 @@ public class SwitchManager {
     }
 
     public List<TaskDescription> getTasks() {
-        return mActiveTasks;
+	    return mLoadedTasks;
     }
 
     public void clearTasks() {
         mLoadedTasks.clear();
-        mActiveTasks.clear();
-    }
-
-    private void filterActiveTasks() {
-        mActiveTasks.clear();
-        Iterator<TaskDescription> nextTask = mLoadedTasks.iterator();
-        while(nextTask.hasNext()) {
-            TaskDescription ad = nextTask.next();
-            if (ad.isActive()) {
-                mActiveTasks.add(ad);
-            }
-        }
     }
 
     public void lockToCurrentApp(boolean close) {
